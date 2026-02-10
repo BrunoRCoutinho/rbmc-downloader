@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <title>RBMC Downloader</title>
+
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+        background-color: #f5f7fa;
+    }
+
+    h1 {
+        color: #1f2933;
+    }
+
+    .box {
+        background: white;
+        padding: 25px;
+        border-radius: 8px;
+        width: 900px;
+        box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    }
+
+    hr {
+        margin: 25px 0;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    th, td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+
+    th {
+        background: #2563eb;
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background: #f3f4f6;
+    }
+
+    .controls {
+        display: flex;
+        gap: 15px;
+        align-items: flex-end;
+        margin-top: 10px;
+    }
+
+    label {
+        font-weight: bold;
+    }
+
+    input, select {
+        padding: 6px;
+    }
+
+    button {
+        padding: 8px 14px;
+        cursor: pointer;
+        border-radius: 4px;
+        border: none;
+        font-weight: bold;
+    }
+
+    .buscar-btn {
+        background: #2563eb;
+        color: white;
+    }
+
+    .download-btn {
+        background: #059669;
+        color: white;
+    }
+
+    .contador {
+        margin-top: 15px;
+        font-weight: bold;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="box">
+
+  <h1>RBMC Downloader</h1>
+
+  <p><b>Status:</b> <span th:text="${status}"></span></p>
+
+  <hr>
+
+  <!-- ================= FORM ================= -->
+
+  <h2>Buscar arquivos RBMC</h2>
+
+  <form method="get" action="/buscar">
+
+    <div class="controls">
+
+      <div>
+        <label>Ano:</label><br>
+        <select name="ano">
+          <option value="2024" th:selected="${ano == 2024}">2024</option>
+          <option value="2025" th:selected="${ano == 2025}">2025</option>
+          <option value="2026" th:selected="${ano == 2026}">2026</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Dia do ano (DOY):</label><br>
+        <input type="number" name="dia" min="1" max="366"
+               th:value="${dia}" required>
+      </div>
+
+      <div>
+        <label>Código RBMC:</label><br>
+        <input type="text" name="estacao"
+               placeholder="Ex: SPAR"
+               th:value="${estacao}"
+               required>
+      </div>
+
+      <div>
+        <button class="buscar-btn" type="submit">
+          🔍 Buscar
+        </button>
+      </div>
+
+    </div>
+
+  </form>
+
+  <!-- =============== BOTÃO ZIP ================= -->
+
+  <div th:if="${arquivos != null and !arquivos.isEmpty()}" style="margin-top:15px;">
+
+    <form method="get" action="/download">
+
+      <input type="hidden" name="ano" th:value="${ano}">
+      <input type="hidden" name="dia" th:value="${dia}">
+      <input type="hidden" name="estacao" th:value="${estacao}">
+
+      <button class="download-btn" type="submit">
+        ⬇ Download 24h (ZIP)
+      </button>
+
+    </form>
+
+  </div>
+
+  <hr>
+
+  <!-- ================= RESULTADOS ================= -->
+
+  <div th:if="${arquivos != null}">
+
+    <h3>
+      Arquivos encontrados:
+      <span th:text="${#lists.size(arquivos)}"></span>
+    </h3>
+
+    <ul>
+      <li th:each="arq : ${arquivos}"
+          th:text="${arq}">
+      </li>
+    </ul>
+
+    <p th:if="${arquivos.isEmpty()}">
+      Nenhum arquivo encontrado.
+    </p>
+
+  </div>
+
+</div>
+
+</body>
+</html>
