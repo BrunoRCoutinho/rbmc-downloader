@@ -7,7 +7,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<!-- Spring Boot -->
+	<!-- Spring Boot Parent -->
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
@@ -22,15 +22,17 @@
 	<name>RbmcDownloader</name>
 	<description>RBMC Downloader</description>
 
+	<!-- ================= PROPERTIES ================= -->
+
 	<properties>
 		<java.version>17</java.version>
 	</properties>
 
-	<!-- ================= DEPENDÊNCIAS ================= -->
+	<!-- ================= DEPENDENCIES ================= -->
 
 	<dependencies>
 
-		<!-- Web -->
+		<!-- Spring Web -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -42,14 +44,14 @@
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 
-		<!-- HTML parser -->
+		<!-- HTML Parser -->
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
 			<version>1.17.2</version>
 		</dependency>
 
-		<!-- H2 (opcional no futuro) -->
+		<!-- H2 (opcional futuro) -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
@@ -63,7 +65,7 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- Testes -->
+		<!-- Tests -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -75,34 +77,15 @@
 	<!-- ================= BUILD ================= -->
 
 	<build>
-
 		<plugins>
 
-			<!-- Compiler -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>17</source>
-					<target>17</target>
-
-					<annotationProcessorPaths>
-						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</path>
-					</annotationProcessorPaths>
-				</configuration>
-			</plugin>
-
-			<!-- Spring Boot -->
+			<!-- Spring Boot Plugin -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 
 		</plugins>
-
 	</build>
 
 </project>
