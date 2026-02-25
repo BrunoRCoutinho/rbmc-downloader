@@ -18,6 +18,10 @@
         * {
           box-sizing: border-box;
         }
+        html, body {
+        height: 100%;
+        overflow: hidden;
+        }
 
         body {
           margin: 0;
@@ -28,16 +32,17 @@
         /* ================= HEADER ================= */
 
         .header {
-          background: white;
-          padding: 16px 50px;
+          background: rgba (11, 42, 67, 0.82);
+          padding: 8px 32px;
           display: flex;
           align-items: center;
           justify-content: space-between;
           box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+          backdrop-filter: blur (1.5px)
         }
 
         .header img {
-          height: 90px;
+          height: 300px;
         }
         .header a img {
     transition: 0.2s ease;
@@ -51,7 +56,7 @@
         /* ================= HERO ================= */
 
       .hero {
-      min-height: 260px;
+      min-height: 210px;
       background-image: url("/img/background.png");
       background-position: center;
       background-size: cover;
@@ -101,7 +106,7 @@
 
       .container {
         max-width: 900px;
-        margin: 80px auto 60px; /* sobe mais só depois que hero estiver maior */
+        margin: 48px auto 60px;
         padding: 0 16px;
         position: relative;
         z-index: 2;
