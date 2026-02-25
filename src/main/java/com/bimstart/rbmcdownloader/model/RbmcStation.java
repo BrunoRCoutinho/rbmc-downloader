@@ -3,18 +3,23 @@ package com.bimstart.rbmcdownloader.model;
 public class RbmcStation {
 
     private String codigo;
-    private String nome;
-
-    public RbmcStation(String codigo, String nome) {
-        this.codigo = codigo;
-        this.nome = nome;
-    }
+    private double latitude;
+    private double longitude;
+    private String estado;
 
     public String getCodigo() {
         return codigo;
     }
 
-    public String getNome() {
-        return nome;
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public String getEstado() {
+        return estado;
     }
 }

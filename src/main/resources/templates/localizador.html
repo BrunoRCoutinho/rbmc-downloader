@@ -1,10 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<form method="get" action="/localizador">
+    <label>Latitude:</label>
+    <input type="text" name="lat" required>
+
+    <label>Longitude:</label>
+    <input type="text" name="lon" required>
+
+    <label>Raio (km):</label>
+    <input type="number" name="raio" value="300">
+
+    <button type="submit">Buscar</button>
+</form>
