@@ -1,0 +1,14 @@
+[
+  {
+    "codigo": "UFPR",
+    "latitude": -25.4484,
+    "longitude": -49.2308,
+    "estado": "PR"
+  },
+  {
+    "codigo": "PARA",
+    "latitude": -1.4558,
+    "longitude": -48.4902,
+    "estado": "PA"
+  }
+]
