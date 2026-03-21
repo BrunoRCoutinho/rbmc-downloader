@@ -1,127 +1,91 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
-
 <head>
   <meta charset="UTF-8">
   <title>RBMC Downloader</title>
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <link rel="stylesheet" th:href="@{/css/style.css}">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-<!-- ===== HEADER ===== -->
-
-<header class="header">
-  <a th:href="@{/}">
-    <img th:src="@{/img/logo.jpg}" alt="RBMC Downloader">
-  </a>
+<!-- ================= HEADER ================= -->
+<header class="main-header">
+  <div class="header-content">
+    <a th:href="@{/}" class="logo">
+      <img th:src="@{/images/logo.svg}"
+           alt="RBMC Downloader Logo"
+           class="logo-img">
+      <span class="logo-text">RBMC Downloader</span>
+    </a>
+  </div>
 </header>
 
-<!-- ===== HERO ===== -->
-
+<!-- ================= HERO ================= -->
 <section class="hero">
-  <div class="hero-content">
-    <h1>Download Automatizado de Dados Geodésicos</h1>
-    <p>Todos os arquivos disponíveis são públicos</p>
-  </div>
+  <h1>Download de arquivos RINEX da RBMC</h1>
+  <p>Baixe dados GNSS diretamente do servidor do IBGE de forma rápida e simples.</p>
 </section>
 
-<!-- ===== CARD PRINCIPAL ===== -->
+<!-- ================= CONTEÚDO ================= -->
+<main class="container">
 
-<div class="container">
-  <div class="box">
-
-    <p><b>Status:</b> <span th:text="${status}"></span></p>
-
-    <hr>
-
-    <h2>Buscar arquivos RBMC</h2>
-
-    <form method="get" th:action="@{/buscar}">
-      <div class="controls">
-
-        <div>
-          <label>Ano</label>
-          <select name="ano">
-            <option value="2020" th:selected="${ano == 2020}">2020</option>
-            <option value="2021" th:selected="${ano == 2021}">2021</option>
-            <option value="2022" th:selected="${ano == 2022}">2022</option>
-            <option value="2023" th:selected="${ano == 2023}">2023</option>
-            <option value="2024" th:selected="${ano == 2024}">2024</option>
-            <option value="2025" th:selected="${ano == 2025}">2025</option>
-            <option value="2026" th:selected="${ano == 2026}">2026</option>
-          </select>
-        </div>
-
-        <div>
-          <label>Dia do ano (DOY)</label>
-          <input type="number"
-                 name="dia"
-                 min="1"
-                 max="366"
-                 th:value="${dia}"
-                 required>
-        </div>
-
-        <div>
-          <label>Código RBMC</label>
-          <input type="text"
-                 name="estacao"
-                 placeholder="Ex: SPAR"
-                 th:value="${estacao}"
-                 required>
-        </div>
-
-        <div>
-          <label>&nbsp;</label>
-          <button class="buscar-btn" type="submit">
-            🔍 Buscar
-          </button>
-        </div>
-
-      </div>
-    </form>
-
-    <!-- DOWNLOAD -->
-
-    <div th:if="${arquivos != null and !arquivos.isEmpty()}" style="margin-top:25px;">
-
-      <form method="get" th:action="@{/download}">
-        <input type="hidden" name="ano" th:value="${ano}">
-        <input type="hidden" name="dia" th:value="${dia}">
-        <input type="hidden" name="estacao" th:value="${estacao}">
-
-        <button class="download-btn" type="submit">
-          ⬇ Download 24h (ZIP)
-        </button>
-      </form>
-
-    </div>
-
-    <hr>
-
-    <!-- RESULTADOS -->
-
-    <div th:if="${arquivos != null}">
-
-      <h3>
-        Arquivos encontrados:
-        <span th:text="${#lists.size(arquivos)}"></span>
-      </h3>
-
-      <p th:if="${arquivos.isEmpty()}">
-        Nenhum arquivo encontrado.
-      </p>
-
-    </div>
-
+  <!-- STATUS -->
+  <div th:if="${mensagem}"
+       th:text="${mensagem}"
+       class="status-box status-info">
   </div>
-</div>
 
-<footer>
-  RBMC Downloader © 2026 — Projeto independente
+  <!-- FORMULÁRIO -->
+  <form method="post" th:action="@{/buscar}" class="search-card">
+
+    <div class="field">
+      <label for="ano">ANO</label>
+      <select id="ano" name="ano" required>
+        <option value="2026" selected>2026</option>
+        <option value="2025">2025</option>
+        <option value="2024">2024</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="dia">DIA DO ANO (DOY)</label>
+      <input type="number" id="dia" name="dia"
+             placeholder="Ex: 037"
+             min="1" max="366" required>
+    </div>
+
+    <div class="field">
+      <label for="estacao">CÓDIGO RBMC</label>
+      <input type="text" id="estacao" name="estacao"
+             placeholder="Ex: PERC"
+             maxlength="4" required>
+    </div>
+
+    <button type="submit" class="btn-search">
+      🔍 Buscar
+    </button>
+
+  </form>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="main-footer">
+
+  <div class="footer-logo">
+    <img th:src="@{/images/logo.svg}"
+         alt="RBMC Logo"
+         class="footer-logo-img">
+  </div>
+
+  <div class="footer-copy">
+    © 2026 RBMC Downloader • Projeto independente
+  </div>
+
 </footer>
 
 </body>
