@@ -1,12 +1,107 @@
-<form method="get" action="/localizador">
-    <label>Latitude:</label>
-    <input type="text" name="lat" required>
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Localizador de Estações — RBMC Downloader</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
 
-    <label>Longitude:</label>
-    <input type="text" name="lon" required>
+<body>
 
-    <label>Raio (km):</label>
-    <input type="number" name="raio" value="300">
+<header class="main-header">
+    <div class="header-content">
+        <a th:href="@{/}" class="logo">
+            <img th:src="@{/images/logo.svg}" alt="RBMC Downloader Logo" class="logo-img">
+            <span class="logo-text">RBMC Downloader</span>
+        </a>
+    </div>
+</header>
 
-    <button type="submit">Buscar</button>
-</form>
+<section class="hero">
+    <h1>Localizador de estações RBMC</h1>
+    <p>Informe sua coordenada e encontre as estações mais próximas dentro do raio desejado.</p>
+</section>
+
+<main class="container">
+
+    <form method="get" th:action="@{/localizador}" class="search-card">
+
+        <div class="field">
+            <label for="lat">LATITUDE</label>
+            <input type="number" id="lat" name="lat" step="0.000001"
+                   placeholder="Ex: -23.5505" th:value="${param.lat}" required>
+        </div>
+
+        <div class="field">
+            <label for="lon">LONGITUDE</label>
+            <input type="number" id="lon" name="lon" step="0.000001"
+                   placeholder="Ex: -46.6333" th:value="${param.lon}" required>
+        </div>
+
+        <div class="field">
+            <label for="raio">RAIO (km)</label>
+            <input type="number" id="raio" name="raio" min="1" max="5000"
+                   th:value="${raio}" required>
+        </div>
+
+        <button type="submit" class="btn-search">
+            🔍 Buscar
+        </button>
+
+    </form>
+
+    <div th:if="${resultados != null}" style="width:100%; margin-top: 28px;">
+
+        <div th:if="${resultados.isEmpty()}" class="status-box" style="margin: 0 auto;">
+            ⚠ Nenhuma estação encontrada no raio informado.
+        </div>
+
+        <div th:if="${!resultados.isEmpty()}">
+
+            <p class="status-box" style="margin-bottom: 16px;">
+                ✅ <span th:text="${resultados.size()}"></span> estação(ões) encontrada(s)
+                — mais próxima: <strong th:text="${maisProxima.codigo}"></strong>
+                (<span th:text="${#numbers.formatDecimal(maisProxima.distanciaKm, 1, 1)}"></span> km)
+            </p>
+
+            <table class="results-table">
+                <thead>
+                <tr>
+                    <th>Estação</th>
+                    <th>Estado</th>
+                    <th>Distância (km)</th>
+                    <th>Ação</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="r : ${resultados}">
+                    <td th:text="${r.codigo}"></td>
+                    <td th:text="${r.estado}"></td>
+                    <td th:text="${#numbers.formatDecimal(r.distanciaKm, 1, 1)}"></td>
+                    <td>
+                        <a th:href="@{/(estacao=${r.codigo})}" class="btn-link">
+                            Baixar dados →
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</main>
+
+<footer class="main-footer">
+    <div class="footer-logo">
+        <img th:src="@{/images/logo.svg}" alt="RBMC Logo" class="footer-logo-img">
+    </div>
+    <div class="footer-copy">
+        © 2026 RBMC Downloader • Projeto independente
+    </div>
+</footer>
+
+</body>
+</html>

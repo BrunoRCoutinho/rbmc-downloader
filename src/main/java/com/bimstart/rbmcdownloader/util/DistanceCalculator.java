@@ -2,11 +2,10 @@ package com.bimstart.rbmcdownloader.util;
 
 public class DistanceCalculator {
 
-    private static final int EARTH_RADIUS = 6371; // km
+    private static final int EARTH_RADIUS = 6371;
 
     public static double haversine(double lat1, double lon1,
                                    double lat2, double lon2) {
-
 
         double dLat = Math.toRadians(lat2 - lat1);
         double dLon = Math.toRadians(lon2 - lon1);
@@ -20,7 +19,6 @@ public class DistanceCalculator {
                         Math.cos(lat2);
 
         double c = 2 * Math.asin(Math.sqrt(a));
-
 
         return EARTH_RADIUS * c;
     }

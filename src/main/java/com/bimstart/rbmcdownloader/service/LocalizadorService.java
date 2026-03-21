@@ -30,7 +30,6 @@ public class LocalizadorService {
                             estacao.getLatitude(),
                             estacao.getLongitude()
                     );
-
                     return new RbmcResultadoDTO(
                             estacao.getCodigo(),
                             estacao.getEstado(),

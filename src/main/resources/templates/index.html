@@ -3,40 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <title>RBMC Downloader</title>
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <link rel="stylesheet" th:href="@{/css/style.css}">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-<!-- ================= HEADER ================= -->
 <header class="main-header">
   <div class="header-content">
     <a th:href="@{/}" class="logo">
-      <img th:src="@{/images/logo.svg}"
-           alt="RBMC Downloader Logo"
-           class="logo-img">
+      <img th:src="@{/images/logo.svg}" alt="RBMC Downloader Logo" class="logo-img">
       <span class="logo-text">RBMC Downloader</span>
     </a>
   </div>
 </header>
 
-<!-- ================= HERO ================= -->
 <section class="hero">
   <h1>Download de arquivos RINEX da RBMC</h1>
   <p>Baixe dados GNSS diretamente do servidor do IBGE de forma rápida e simples.</p>
 </section>
 
-<!-- ================= CONTEÚDO ================= -->
 <main class="container">
 
   <!-- STATUS -->
-  <div th:if="${mensagem}"
-       th:text="${mensagem}"
-       class="status-box status-info">
+  <div th:if="${statusMessage}"
+       th:text="${statusMessage}"
+       th:class="'status-box ' + ${statusType == 'error' ? 'status-error' : 'status-success'}">
   </div>
 
   <!-- FORMULÁRIO -->
@@ -45,9 +38,9 @@
     <div class="field">
       <label for="ano">ANO</label>
       <select id="ano" name="ano" required>
-        <option value="2026" selected>2026</option>
-        <option value="2025">2025</option>
-        <option value="2024">2024</option>
+        <option value="2026" th:selected="${ano == 2026}">2026</option>
+        <option value="2025" th:selected="${ano == 2025}">2025</option>
+        <option value="2024" th:selected="${ano == 2024}">2024</option>
       </select>
     </div>
 
@@ -55,14 +48,18 @@
       <label for="dia">DIA DO ANO (DOY)</label>
       <input type="number" id="dia" name="dia"
              placeholder="Ex: 037"
-             min="1" max="366" required>
+             min="1" max="366"
+             th:value="${dia}"
+             required>
     </div>
 
     <div class="field">
       <label for="estacao">CÓDIGO RBMC</label>
       <input type="text" id="estacao" name="estacao"
              placeholder="Ex: PERC"
-             maxlength="4" required>
+             maxlength="4"
+             th:value="${estacao}"
+             required>
     </div>
 
     <button type="submit" class="btn-search">
@@ -71,21 +68,25 @@
 
   </form>
 
-</main>
+  <!-- RESULTADOS -->
+  <div th:if="${arquivos}" style="width:100%; margin-top: 28px; display: flex; flex-direction: column; align-items: center; gap: 16px;">
 
-<!-- ================= FOOTER ================= -->
-<footer class="main-footer">
+    <a th:href="@{/download(ano=${ano}, dia=${dia}, estacao=${estacao})}"
+       class="btn-search" style="text-decoration: none;">
+      ⬇ Baixar tudo em ZIP
+    </a>
 
-  <div class="footer-logo">
-    <img th:src="@{/images/logo.svg}"
-         alt="RBMC Logo"
-         class="footer-logo-img">
   </div>
 
+</main>
+
+<footer class="main-footer">
+  <div class="footer-logo">
+    <img th:src="@{/images/logo.svg}" alt="RBMC Logo" class="footer-logo-img">
+  </div>
   <div class="footer-copy">
     © 2026 RBMC Downloader • Projeto independente
   </div>
-
 </footer>
 
 </body>
