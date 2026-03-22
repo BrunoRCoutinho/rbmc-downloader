@@ -18,7 +18,7 @@
 	<artifactId>rbmc-downloader</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
-	<n>RbmcDownloader</n>
+	<name>RbmcDownloader</name>
 	<description>RBMC Downloader</description>
 
 	<properties>
