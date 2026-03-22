@@ -13,9 +13,13 @@
 <header class="main-header">
   <div class="header-content">
     <a th:href="@{/}" class="logo">
-      <img th:src="@{/images/logo.svg}" alt="RBMC Downloader Logo" class="logo-img">
+      <img th:src="@{/images/logo.svg}" alt="Logo" class="logo-img">
       <span class="logo-text">RBMC Downloader</span>
     </a>
+    <nav class="main-nav">
+      <a th:href="@{/}" class="nav-link nav-active">Download</a>
+      <a th:href="@{/localizador}" class="nav-link">Localizador</a>
+    </nav>
   </div>
 </header>
 
@@ -70,12 +74,10 @@
 
   <!-- RESULTADOS -->
   <div th:if="${arquivos}" style="width:100%; margin-top: 28px; display: flex; flex-direction: column; align-items: center; gap: 16px;">
-
     <a th:href="@{/download(ano=${ano}, dia=${dia}, estacao=${estacao})}"
        class="btn-search" style="text-decoration: none;">
       ⬇ Baixar tudo em ZIP
     </a>
-
   </div>
 
 </main>
@@ -88,6 +90,20 @@
     © 2026 RBMC Downloader • Projeto independente
   </div>
 </footer>
+
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const estacao = params.get('estacao');
+    if (estacao) {
+      const campo = document.getElementById('estacao');
+      if (campo) {
+        campo.value = estacao.toUpperCase();
+        campo.focus();
+      }
+    }
+  });
+</script>
 
 </body>
 </html>

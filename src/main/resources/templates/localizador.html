@@ -6,6 +6,242 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <style>
+        * { box-sizing: border-box; }
+
+        .loc-layout {
+            display: flex;
+            gap: 16px;
+            width: 100%;
+            padding: 0 24px 60px;
+            align-items: flex-start;
+        }
+
+        /* ── Painel esquerdo ── */
+        .loc-sidebar {
+            width: 420px;
+            min-width: 420px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .loc-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .loc-card-title {
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            color: var(--text-soft);
+            margin-bottom: 10px;
+        }
+
+        .loc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .raio-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .raio-row input[type=range] {
+            flex: 1;
+            accent-color: var(--primary);
+        }
+
+        .raio-val {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+            min-width: 55px;
+            text-align: right;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .btn-gps {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-gps:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .addr-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .addr-row input {
+            flex: 1;
+            background: #0e141d;
+            border: 1px solid #1f2a37;
+            color: #fff;
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .addr-row input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(24,207,194,0.25);
+        }
+
+        .addr-row button {
+            background: var(--primary);
+            color: #002c29;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .addr-row button:hover {
+            background: var(--primary-hover);
+        }
+
+        .proxima-card {
+            background: rgba(24,207,194,0.08);
+            border: 1px solid var(--primary);
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: none;
+        }
+
+        .proxima-codigo {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            font-family: monospace;
+        }
+
+        .proxima-info {
+            font-size: 0.82rem;
+            color: var(--text-soft);
+            margin-top: 2px;
+        }
+
+        .btn-buscar-dados {
+            display: inline-block;
+            margin-top: 10px;
+            background: var(--primary);
+            color: #002c29;
+            border: none;
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .btn-buscar-dados:hover {
+            background: var(--primary-hover);
+        }
+
+        /* ── Painel central — tabela ── */
+        .loc-table-panel {
+            width: 280px;
+            min-width: 280px;
+            flex-shrink: 0;
+            display: none;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .loc-table-panel.visible {
+            display: flex;
+        }
+
+        .loc-table-panel .results-table {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            width: 100%;
+        }
+
+        .loc-table-panel .results-table th {
+            font-size: 10px;
+            padding: 10px 12px;
+        }
+
+        .loc-table-panel .results-table td {
+            padding: 9px 12px;
+            font-size: 13px;
+        }
+
+        .dot-color {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        /* ── Painel direito — mapa ── */
+        .loc-main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        #map {
+            width: 100%;
+            height: 520px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        /* ── Status ── */
+        .loc-status {
+            font-size: 0.85rem;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid;
+            display: none;
+        }
+
+        /* ── Responsivo ── */
+        @media (max-width: 900px) {
+            .loc-layout {
+                flex-direction: column;
+                padding: 0 16px 40px;
+            }
+            .loc-sidebar, .loc-table-panel {
+                width: 100%;
+                min-width: unset;
+            }
+            #map { height: 350px; }
+        }
+    </style>
 </head>
 
 <body>
@@ -13,95 +249,319 @@
 <header class="main-header">
     <div class="header-content">
         <a th:href="@{/}" class="logo">
-            <img th:src="@{/images/logo.svg}" alt="RBMC Downloader Logo" class="logo-img">
+            <img th:src="@{/images/logo.svg}" alt="Logo" class="logo-img">
             <span class="logo-text">RBMC Downloader</span>
         </a>
+        <nav class="main-nav">
+            <a th:href="@{/}" class="nav-link">Download</a>
+            <a th:href="@{/localizador}" class="nav-link nav-active">Localizador</a>
+        </nav>
     </div>
 </header>
 
 <section class="hero">
     <h1>Localizador de estações RBMC</h1>
-    <p>Informe sua coordenada e encontre as estações mais próximas dentro do raio desejado.</p>
+    <p>Informe sua localização e encontre as estações mais próximas do seu levantamento.</p>
 </section>
 
-<main class="container">
+<div class="loc-layout">
 
-    <form method="get" th:action="@{/localizador}" class="search-card">
+    <!-- ══ PAINEL ESQUERDO — CONTROLES ══ -->
+    <aside class="loc-sidebar">
 
-        <div class="field">
-            <label for="lat">LATITUDE</label>
-            <input type="number" id="lat" name="lat" step="0.000001"
-                   placeholder="Ex: -23.5505" th:value="${param.lat}" required>
+        <div class="loc-card">
+            <p class="loc-card-title">BUSCAR POR ENDEREÇO</p>
+            <div class="addr-row">
+                <input type="text" id="endereco" placeholder="Ex: São José do Rio Preto, SP">
+                <button onclick="geocodificar()">🔍</button>
+            </div>
         </div>
 
-        <div class="field">
-            <label for="lon">LONGITUDE</label>
-            <input type="number" id="lon" name="lon" step="0.000001"
-                   placeholder="Ex: -46.6333" th:value="${param.lon}" required>
+        <div class="loc-card">
+            <p class="loc-card-title">COORDENADAS</p>
+            <div class="loc-grid">
+                <div class="field">
+                    <label for="lat">LATITUDE</label>
+                    <input type="number" id="lat" step="0.000001" placeholder="-20.8155">
+                </div>
+                <div class="field">
+                    <label for="lon">LONGITUDE</label>
+                    <input type="number" id="lon" step="0.000001" placeholder="-49.3795">
+                </div>
+            </div>
+
+            <div class="raio-row">
+                <label style="font-size:11px; color:var(--text-soft); white-space:nowrap;">RAIO (km)</label>
+                <input type="range" id="raio" min="50" max="1000" step="50" value="300"
+                       oninput="document.getElementById('raioVal').textContent = this.value + ' km'">
+                <span class="raio-val" id="raioVal">300 km</span>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn-search" onclick="buscar()" style="flex:1; justify-content:center;"> Buscar</button>
+                <button class="btn-gps" onclick="usarGPS()" title="Usar GPS">🎯</button>
+            </div>
         </div>
 
-        <div class="field">
-            <label for="raio">RAIO (km)</label>
-            <input type="number" id="raio" name="raio" min="1" max="5000"
-                   th:value="${raio}" required>
+        <div id="statusMsg" class="loc-status"></div>
+
+        <div id="proximaCard" class="proxima-card">
+            <div class="proxima-codigo" id="proximaCodigo"></div>
+            <div class="proxima-info" id="proximaInfo"></div>
+            <a id="proximaLink" href="#" class="btn-buscar-dados">⬇ Buscar dados desta estação</a>
         </div>
 
-        <button type="submit" class="btn-search">
-            🔍 Buscar
-        </button>
+    </aside>
 
-    </form>
-
-    <div th:if="${resultados != null}" style="width:100%; margin-top: 28px;">
-
-        <div th:if="${resultados.isEmpty()}" class="status-box" style="margin: 0 auto;">
-            ⚠ Nenhuma estação encontrada no raio informado.
-        </div>
-
-        <div th:if="${!resultados.isEmpty()}">
-
-            <p class="status-box" style="margin-bottom: 16px;">
-                ✅ <span th:text="${resultados.size()}"></span> estação(ões) encontrada(s)
-                — mais próxima: <strong th:text="${maisProxima.codigo}"></strong>
-                (<span th:text="${#numbers.formatDecimal(maisProxima.distanciaKm, 1, 1)}"></span> km)
-            </p>
-
-            <table class="results-table">
-                <thead>
-                <tr>
-                    <th>Estação</th>
-                    <th>Estado</th>
-                    <th>Distância (km)</th>
-                    <th>Ação</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="r : ${resultados}">
-                    <td th:text="${r.codigo}"></td>
-                    <td th:text="${r.estado}"></td>
-                    <td th:text="${#numbers.formatDecimal(r.distanciaKm, 1, 1)}"></td>
-                    <td>
-                        <a th:href="@{/(estacao=${r.codigo})}" class="btn-link">
-                            Baixar dados →
-                        </a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-
-        </div>
+    <!-- ══ PAINEL CENTRAL — TABELA ══ -->
+    <div class="loc-table-panel" id="tabelaPanel">
+        <table class="results-table">
+            <thead>
+            <tr>
+                <th>Estação</th>
+                <th>UF</th>
+                <th>Dist. (km)</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody id="tabelaBody"></tbody>
+        </table>
     </div>
 
-</main>
+    <!-- ══ PAINEL DIREITO — MAPA ══ -->
+    <div class="loc-main">
+        <div id="map"></div>
+    </div>
+
+</div>
 
 <footer class="main-footer">
     <div class="footer-logo">
         <img th:src="@{/images/logo.svg}" alt="RBMC Logo" class="footer-logo-img">
     </div>
-    <div class="footer-copy">
-        © 2026 RBMC Downloader • Projeto independente
-    </div>
+    <div class="footer-copy">© 2026 RBMC Downloader • Projeto independente</div>
 </footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script th:inline="javascript">
+    const stationsRaw = /*[[${stations}]]*/ "[]";
+    const STATIONS = typeof stationsRaw === 'string' ? JSON.parse(stationsRaw) : stationsRaw;
+
+    const map = L.map('map').setView([-15, -50], 4);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    let userMarker = null;
+    let circleLayer = null;
+    let stationMarkers = [];
+
+    function haversine(lat1, lon1, lat2, lon2) {
+        const R = 6371;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat/2)**2 +
+            Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2)**2;
+        return R * 2 * Math.asin(Math.sqrt(a));
+    }
+
+    function getColor(t) {
+        // t: 0 = mais próxima (verde), 1 = mais distante (vermelho)
+        let r, g;
+        if (t < 0.5) {
+            r = Math.round(t * 2 * 220);
+            g = 200;
+        } else {
+            r = 220;
+            g = Math.round((1 - (t - 0.5) * 2) * 200);
+        }
+        return { css: `rgb(${r},${g},50)`, r, g };
+    }
+
+    function buscar() {
+        const lat = parseFloat(document.getElementById('lat').value);
+        const lon = parseFloat(document.getElementById('lon').value);
+        const raio = parseInt(document.getElementById('raio').value);
+
+        if (isNaN(lat) || isNaN(lon)) {
+            mostrarStatus('⚠ Informe coordenadas válidas ou use a busca por endereço.', 'error');
+            return;
+        }
+
+        if (!Array.isArray(STATIONS) || STATIONS.length === 0) {
+            mostrarStatus('⚠ Erro ao carregar as estações. Recarregue a página.', 'error');
+            return;
+        }
+
+        const results = STATIONS
+            .map(s => ({ ...s, dist: haversine(lat, lon, s.latitude, s.longitude) }))
+            .filter(s => s.dist <= raio)
+            .sort((a, b) => a.dist - b.dist);
+
+        atualizarMapa(lat, lon, raio, results);
+        atualizarTabela(results);
+        atualizarProxima(results);
+
+        if (results.length === 0) {
+            mostrarStatus(`⚠ Nenhuma estação encontrada no raio de ${raio} km. Tente aumentar o raio.`, 'error');
+        } else {
+            mostrarStatus(`✅ ${results.length} estação(ões) encontrada(s) no raio de ${raio} km.`, 'success');
+        }
+    }
+
+    function atualizarMapa(lat, lon, raio, results) {
+        if (userMarker) userMarker.remove();
+        if (circleLayer) circleLayer.remove();
+        stationMarkers.forEach(m => m.remove());
+        stationMarkers = [];
+
+        const userIcon = L.divIcon({
+            className: '',
+            html: `<div style="position:relative;width:36px;height:44px;">
+                <svg viewBox="0 0 36 44" xmlns="http://www.w3.org/2000/svg" style="width:36px;height:44px;">
+                    <path d="M18 0C8.06 0 0 8.06 0 18c0 13.5 18 26 18 26S36 31.5 36 18C36 8.06 27.94 0 18 0z" fill="#ef4444"/>
+                    <circle cx="18" cy="18" r="8" fill="white" opacity="0.9"/>
+                </svg>
+            </div>`,
+            iconSize: [36, 44], iconAnchor: [18, 44], popupAnchor: [0, -44]
+        });
+
+        userMarker = L.marker([lat, lon], { icon: userIcon })
+            .addTo(map).bindPopup('<b>Sua localização</b>');
+
+        circleLayer = L.circle([lat, lon], {
+            radius: raio * 1000,
+            color: '#18cfc2', fillColor: '#18cfc2', fillOpacity: 0.05, weight: 1.5
+        }).addTo(map);
+
+        const maxDist = results.length > 0 ? results[results.length - 1].dist : 1;
+        const minDist = results.length > 0 ? results[0].dist : 0;
+
+        results.forEach((s) => {
+            const t = maxDist === minDist ? 0 : (s.dist - minDist) / (maxDist - minDist);
+            const { css: bgColor } = getColor(t);
+            const code = s.codigo.substring(0, 4);
+
+            const icon = L.divIcon({
+                className: '',
+                html: `<div style="position:relative;width:44px;height:52px;">
+                    <svg viewBox="0 0 44 52" xmlns="http://www.w3.org/2000/svg" style="width:44px;height:52px;">
+                        <path d="M22 0C9.85 0 0 9.85 0 22c0 16.5 22 30 22 30S44 38.5 44 22C44 9.85 34.15 0 22 0z" fill="${bgColor}"/>
+                        <circle cx="22" cy="22" r="14" fill="white" opacity="0.15"/>
+                    </svg>
+                    <div style="
+                        position:absolute;top:8px;left:0;width:44px;
+                        text-align:center;font-family:monospace;
+                        font-size:9px;font-weight:700;color:#fff;
+                        letter-spacing:-0.5px;line-height:1;
+                    ">${code}</div>
+                </div>`,
+                iconSize: [44, 52], iconAnchor: [22, 52], popupAnchor: [0, -52]
+            });
+
+            const m = L.marker([s.latitude, s.longitude], { icon })
+                .addTo(map)
+                .bindPopup(`<b>${s.codigo}</b><br>${s.estado || '—'}<br>${s.dist.toFixed(1)} km`);
+            stationMarkers.push(m);
+        });
+
+        const group = L.featureGroup([userMarker, ...stationMarkers]);
+        if (stationMarkers.length > 0) {
+            map.fitBounds(group.getBounds().pad(0.2));
+        } else {
+            map.setView([lat, lon], 8);
+        }
+    }
+
+    function atualizarTabela(results) {
+        const panel = document.getElementById('tabelaPanel');
+        const body = document.getElementById('tabelaBody');
+        body.innerHTML = '';
+
+        if (results.length === 0) {
+            panel.classList.remove('visible');
+            return;
+        }
+
+        const maxDist = results[results.length - 1].dist;
+        const minDist = results[0].dist;
+
+        results.forEach(s => {
+            const t = maxDist === minDist ? 0 : (s.dist - minDist) / (maxDist - minDist);
+            const { css: dotColor } = getColor(t);
+            body.innerHTML += `
+                <tr>
+                    <td style="font-family:monospace;font-weight:600;">
+                        <span class="dot-color" style="background:${dotColor}"></span>${s.codigo}
+                    </td>
+                    <td>${s.estado || '—'}</td>
+                    <td>${s.dist.toFixed(1)}</td>
+                    <td><a href="/?estacao=${s.codigo}" class="btn-link">⬇</a></td>
+                </tr>`;
+        });
+
+        panel.classList.add('visible');
+    }
+
+    function atualizarProxima(results) {
+        const card = document.getElementById('proximaCard');
+        if (results.length === 0) { card.style.display = 'none'; return; }
+        const p = results[0];
+        document.getElementById('proximaCodigo').textContent = p.codigo;
+        document.getElementById('proximaInfo').textContent =
+            `${p.estado || '—'} • ${p.dist.toFixed(1)} km de distância`;
+        document.getElementById('proximaLink').href = `/?estacao=${p.codigo}`;
+        card.style.display = 'block';
+    }
+
+    function usarGPS() {
+        if (!navigator.geolocation) {
+            mostrarStatus('⚠ Geolocalização não suportada pelo browser.', 'error');
+            return;
+        }
+        mostrarStatus('📡 Obtendo localização...', 'success');
+        navigator.geolocation.getCurrentPosition(pos => {
+            document.getElementById('lat').value = pos.coords.latitude.toFixed(6);
+            document.getElementById('lon').value = pos.coords.longitude.toFixed(6);
+            buscar();
+        }, () => {
+            mostrarStatus('⚠ Não foi possível obter a localização.', 'error');
+        });
+    }
+
+    async function geocodificar() {
+        const endereco = document.getElementById('endereco').value.trim();
+        if (!endereco) return;
+        mostrarStatus('🔍 Buscando endereço...', 'success');
+        try {
+            const res = await fetch(
+                `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(endereco)}&format=json&limit=1&countrycodes=br`,
+                { headers: { 'Accept-Language': 'pt-BR' } }
+            );
+            const data = await res.json();
+            if (!data.length) {
+                mostrarStatus('⚠ Endereço não encontrado. Tente ser mais específico.', 'error');
+                return;
+            }
+            document.getElementById('lat').value = parseFloat(data[0].lat).toFixed(6);
+            document.getElementById('lon').value = parseFloat(data[0].lon).toFixed(6);
+            buscar();
+        } catch {
+            mostrarStatus('⚠ Erro ao buscar endereço.', 'error');
+        }
+    }
+
+    function mostrarStatus(msg, tipo) {
+        const el = document.getElementById('statusMsg');
+        el.textContent = msg;
+        el.className = 'loc-status ' + (tipo === 'error' ? 'status-error' : 'status-success');
+        el.style.display = 'block';
+    }
+
+    document.getElementById('endereco').addEventListener('keydown', e => {
+        if (e.key === 'Enter') geocodificar();
+    });
+</script>
 
 </body>
 </html>
