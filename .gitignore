@@ -31,3 +31,36 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### GeoNexus / RBMC Downloader ###
+
+# Arquivos gerados pelo sistema de download
+downloads/
+*.zip
+*.gz
+*.crx
+*.crx.gz
+*.rnx
+*.obs
+
+# Imagens e arquivos grandes de assets (se houver versões locais)
+*.jpg
+*.jpeg
+*.png
+*.svg
+
+# Arquivos de ambiente e segredos
+.env
+.env.*
+application-prod.properties
+application-local.properties
+secrets.properties
+
+# Logs
+*.log
+logs/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
