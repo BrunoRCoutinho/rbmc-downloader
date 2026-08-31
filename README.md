@@ -1,4 +1,4 @@
-RBMC Downloader
+RBMC Downloader --- PROJETO FEITO E ATUALIZADO PARA ESTUDOS ---
 Aplicação web para download automatizado de arquivos das estações da Rede Brasileira de Monitoramento Contínuo (RBMC), disponibilizados pelo IBGE, com foco no apoio ao planejamento de levantamentos cartográficos com tecnologia GNSS.
 
 Problema
