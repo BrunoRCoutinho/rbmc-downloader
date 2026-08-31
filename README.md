@@ -8,13 +8,13 @@ Em projetos com múltiplos dias de levantamento e mais de uma estação RBMC pr�
 Solução - 
 A aplicação consome a API do IBGE para localizar e baixar os arquivos de forma automatizada. O usuário informa:
 
-Ano
-Data
+Ano -
+Data (DOY - Day Of Year) - 
 Estação RBMC desejada
 
 O back-end localiza todos os arquivos correspondentes e os disponibiliza em um único arquivo compactado (.zip), cobrindo as 24 horas do dia selecionado.
 
-Funcionalidades
+Funcionalidades - 
 
  Download automatizado por estação e data
  Compactação das 24 horas em um único arquivo .zip
@@ -22,7 +22,7 @@ Funcionalidades
  Conversor de coordenadas entre os datums utilizados no Brasil
 
 
-Stack
+Stack - 
 CamadaTecnologiaBack-endJava + Spring BootFront-endHTML, CSS, ThymeleafAPI externaIBGE - RBMC
 
 
