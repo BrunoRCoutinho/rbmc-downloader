@@ -1,11 +1,11 @@
 RBMC Downloader --- PROJETO FEITO E ATUALIZADO PARA ESTUDOS ---
 Aplicação web para download automatizado de arquivos das estações da Rede Brasileira de Monitoramento Contínuo (RBMC), disponibilizados pelo IBGE, com foco no apoio ao planejamento de levantamentos cartográficos com tecnologia GNSS.
 
-Problema
+Problema - 
 O processamento de dados GNSS exige o download das bases de referência das estações RBMC. O portal do IBGE disponibiliza esses arquivos individualmente — 8 arquivos por hora, totalizando 192 arquivos para cada 24 horas de dados.
 Em projetos com múltiplos dias de levantamento e mais de uma estação RBMC próxima à área de trabalho, a quantidade de downloads pode se tornar um gargalo operacional significativo.
 
-Solução
+Solução - 
 A aplicação consome a API do IBGE para localizar e baixar os arquivos de forma automatizada. O usuário informa:
 
 Ano
